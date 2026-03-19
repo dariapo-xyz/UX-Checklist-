@@ -318,10 +318,9 @@
   <div class="header">
     <div>
       <h1>macOS UX Checklist</h1>
-      <div class="subtitle">Pre-release quality check for macOS apps · Based on Apple HIG</div>
+      <div class="subtitle">Based on Apple HIG and real-world MacPaw's UX evaluations</div>
     </div>
     <div class="logo">
-      <div class="logo-dot"></div>
       Crafted by MacPaw
     </div>
   </div>
@@ -486,15 +485,39 @@
   </div>
 
   <div class="footer">
-    Crafted with ❤️ by MacPaw · Inspired by <a href="https://developer.apple.com/design/human-interface-guidelines/" target="_blank">Apple Human Interface Guidelines</a>
+    Crafted with ❤️ by MacPaw · Based on Apple HIG, real-world UX evaluations, and MacPaw's best practices
   </div>
 </div>
 
 <script>
   const TOTAL = document.querySelectorAll('.item').length;
+  const STORAGE_KEY = 'macpaw-ux-checklist-v1';
+
+  // Assign stable IDs to each item
+  document.querySelectorAll('.item').forEach((el, i) => {
+    el.dataset.id = 'item-' + i;
+  });
+
+  // Load saved state from localStorage
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      saved.forEach(id => {
+        const el = document.querySelector(`[data-id="${id}"]`);
+        if (el) el.classList.add('checked');
+      });
+    } catch(e) {}
+  }
+
+  // Save current state to localStorage
+  function saveState() {
+    const checked = [...document.querySelectorAll('.item.checked')].map(el => el.dataset.id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+  }
 
   function toggle(el) {
     el.classList.toggle('checked');
+    saveState();
     updateProgress();
   }
 
@@ -539,8 +562,9 @@
   }
 
   function resetAll() {
-    if (!confirm('Reset all checks?')) return;
+    if (!confirm('Reset all checks? Your progress will be cleared.')) return;
     document.querySelectorAll('.item.checked').forEach(el => el.classList.remove('checked'));
+    localStorage.removeItem(STORAGE_KEY);
     updateProgress();
   }
 
@@ -568,6 +592,7 @@
     });
   }
 
+  loadState();
   updateProgress();
 </script>
 </body>
