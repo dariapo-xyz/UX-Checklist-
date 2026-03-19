@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>macOS UX Checklist — MacPaw</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    background: #0a0a0f;
+    color: #e8e8f0;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-dot {
+    width: 24px; height: 24px;
+    background: linear-gradient(135deg, #0A84FF, #5E5CE6);
+    border-radius: 6px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+
+  /* Progress bar */
+  .progress-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .progress-stat {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0A84FF;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px;
+  }
+
+  .progress-bar-wrap { flex: 1; }
+
+  .progress-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0A84FF, #5E5CE6);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .score-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  /* Category tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .tab:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+  .tab.active { background: rgba(10,132,255,0.15); border-color: rgba(10,132,255,0.4); color: #0A84FF; }
+
+  /* Sections */
+  .section {
+    margin-bottom: 28px;
+    display: none;
+  }
+
+  .section.visible { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .section-count {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    margin-left: auto;
+  }
+
+  /* Checklist items */
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 1px solid transparent;
+    margin-bottom: 4px;
+    position: relative;
+  }
+
+  .item:hover { background: rgba(255,255,255,0.04); }
+
+  .item.checked {
+    background: rgba(52, 199, 89, 0.06);
+    border-color: rgba(52, 199, 89, 0.12);
+  }
+
+  .checkbox {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .item.checked .checkbox {
+    background: #34C759;
+    border-color: #34C759;
+  }
+
+  .checkmark {
+    opacity: 0;
+    transition: opacity 0.15s;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .item.checked .checkmark { opacity: 1; }
+
+  .item-content { flex: 1; }
+
+  .item-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+
+  .item.checked .item-text {
+    color: rgba(255,255,255,0.35);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,255,255,0.15);
+  }
+
+  .severity {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .sev-critical { background: rgba(255,69,58,0.12); color: #FF453A; }
+  .sev-important { background: rgba(255,214,10,0.1); color: #FFD60A; }
+  .sev-polish { background: rgba(52,199,89,0.1); color: #34C759; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 24px 0;
+  }
+
+  /* Issue type legend */
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* Actions */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #0A84FF;
+    color: white;
+  }
+  .btn-primary:hover { background: #0070E0; }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); color: white; }
+
+  /* Footer */
+  .footer {
+    margin-top: 60px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .footer a { color: rgba(10,132,255,0.6); text-decoration: none; }
+
+  /* Score states */
+  .score-0 { color: rgba(255,255,255,0.3); }
+  .score-low { color: #FF453A; }
+  .score-mid { color: #FFD60A; }
+  .score-high { color: #34C759; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <h1>macOS UX Checklist</h1>
+      <div class="subtitle">Pre-release quality check for macOS apps · Based on Apple HIG</div>
+    </div>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      Crafted by MacPaw
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-card">
+    <div class="progress-stat" id="pct">0%</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label" id="progress-label">0 of 52 checks completed</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="score-badge" id="score-badge">Not started</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('all')">All checks</div>
+    <div class="tab" onclick="showTab('visual')">👁 Visual</div>
+    <div class="tab" onclick="showTab('interaction')">⚡️ Interaction</div>
+    <div class="tab" onclick="showTab('a11y')">♿️ Accessibility</div>
+    <div class="tab" onclick="showTab('copy')">✍️ Copy</div>
+    <div class="tab" onclick="showTab('onboarding')">🚀 Onboarding</div>
+    <div class="tab" onclick="showTab('navigation')">🗺 Navigation</div>
+    <div class="tab" onclick="showTab('legend')">📖 Issue Types</div>
+  </div>
+
+  <!-- Section: Visual -->
+  <div class="section visible" data-tab="visual">
+    <div class="section-header">
+      <div class="section-title">👁 Visual & Layout</div>
+      <div class="section-count" id="count-visual"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Uses SF Pro (or SF Mono for code). No custom fonts that clash with macOS feel</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Body text is at least 13pt. Nothing important smaller than 11pt</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Spacing follows 8pt grid. Padding is consistent across the app</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Text contrast meets WCAG AA: 4.5:1 for text, 3:1 for UI elements</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Dark mode works. No hardcoded hex colors — uses NSColor semantic values</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Traffic lights (●●●) are in standard position. Window is resizable where expected</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Native macOS controls used where possible (NSButton, NSTextField, etc.)</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Custom controls look clearly interactive. No mystery meat navigation</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Vibrancy / translucency used appropriately (NSVisualEffectView)</div><span class="severity sev-polish">Polish</span></div></div>
+  </div>
+
+  <!-- Section: Interaction -->
+  <div class="section visible" data-tab="interaction">
+    <div class="section-header">
+      <div class="section-title">⚡️ Interaction & Feedback</div>
+      <div class="section-count" id="count-interaction"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Every action >200ms shows a loading indicator</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Every action >2s shows progress with estimated time or %</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Errors use human language. No error codes shown to users</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Error messages include: what happened + why + how to fix it</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Success states are confirmed clearly (not just "nothing went wrong")</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Empty states are instructive — tell the user what to do, not just show nothing</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Destructive actions (delete, overwrite) require confirmation</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Undo is available for destructive actions where possible</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Hover states are visible on all interactive elements</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Focus rings visible for keyboard navigation</div><span class="severity sev-important">Important</span></div></div>
+  </div>
+
+  <!-- Section: Accessibility -->
+  <div class="section visible" data-tab="a11y">
+    <div class="section-header">
+      <div class="section-title">♿️ Keyboard & Accessibility</div>
+      <div class="section-count" id="count-a11y"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Escape closes modals, popovers, and dismissable UI</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tab order is logical (left→right, top→bottom)</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Common actions have keyboard shortcuts (⌘N, ⌘S, ⌘W, etc.)</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Shortcuts follow macOS conventions. No conflicts with system shortcuts</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">VoiceOver labels set on all controls (accessibilityLabel)</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Images and icons have accessibility descriptions</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">App works with Reduce Motion preference enabled</div><span class="severity sev-polish">Polish</span></div></div>
+  </div>
+
+  <!-- Section: Copy -->
+  <div class="section visible" data-tab="copy">
+    <div class="section-header">
+      <div class="section-title">✍️ UX Copy</div>
+      <div class="section-count" id="count-copy"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Button labels are action-oriented ("Save Changes" not "OK")</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">No jargon or technical terms in UI visible to end users</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Sentence case used consistently (not Title Case Everywhere)</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Onboarding copy is encouraging and progressive, not overwhelming</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tooltips add new information — they don't just repeat the button label</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Placeholder text is an example, not a label (don't replace the label with placeholder)</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tone is consistent across all screens</div><span class="severity sev-polish">Polish</span></div></div>
+  </div>
+
+  <!-- Section: Onboarding -->
+  <div class="section visible" data-tab="onboarding">
+    <div class="section-header">
+      <div class="section-title">🚀 Onboarding & First Use</div>
+      <div class="section-count" id="count-onboarding"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">First-run experience guides user to first value in under 3 steps</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Permission requests explain why the permission is needed and what it enables</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">No required sign-up before user sees value</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Setup progress is shown if onboarding has multiple steps</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">User can skip non-essential onboarding steps</div><span class="severity sev-polish">Polish</span></div></div>
+  </div>
+
+  <!-- Section: Navigation -->
+  <div class="section visible" data-tab="navigation">
+    <div class="section-header">
+      <div class="section-title">🗺 Navigation & Structure</div>
+      <div class="section-count" id="count-navigation"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">User always knows where they are in the app</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">There is always a way to go back or cancel</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">The most common action is the most prominent one</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Settings are easy to find. Not buried more than 2 levels deep</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Navigation structure matches macOS conventions for the app type</div><span class="severity sev-important">Important</span></div></div>
+  </div>
+
+  <!-- Section: Legend -->
+  <div class="section" data-tab="legend">
+    <div class="section-header">
+      <div class="section-title">📖 Issue Type Reference</div>
+    </div>
+    <p style="font-size:13px; color: rgba(255,255,255,0.4); margin-bottom: 16px;">Use these labels when logging UX bugs in Jira, Linear, or GitHub Issues.</p>
+    <div class="legend">
+      <div class="legend-item">🟠 <span><strong>Error handling</strong> — missing loading, error, success states</span></div>
+      <div class="legend-item">🔴 <span><strong>Empty states</strong> — blank screens with no guidance</span></div>
+      <div class="legend-item">🟢 <span><strong>Navigation</strong> — unclear structure, findability</span></div>
+      <div class="legend-item">🔵 <span><strong>Onboarding</strong> — first-run, setup flow, time-to-value</span></div>
+      <div class="legend-item">🟣 <span><strong>Accessibility</strong> — contrast, keyboard nav, VoiceOver</span></div>
+      <div class="legend-item">🟡 <span><strong>Copy</strong> — CTAs, labels, error messages, tone</span></div>
+      <div class="legend-item">🩷 <span><strong>Visual design</strong> — spacing, color, consistency</span></div>
+      <div class="legend-item">🌸 <span><strong>Cognitive overload</strong> — too much at once, decision fatigue</span></div>
+      <div class="legend-item">🌺 <span><strong>Functional bugs</strong> — broken interactions, missing feedback</span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-header"><div class="section-title">📊 Scoring Guide</div></div>
+    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+      <div style="display:flex; justify-content:space-between; font-size:13px; padding: 10px 14px; border-radius: 8px; background: rgba(52,199,89,0.07);">
+        <span style="color: #34C759; font-weight: 600;">9–10</span><span style="color:rgba(255,255,255,0.55)">Exceptional — sets the standard for the category</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; padding: 10px 14px; border-radius: 8px; background: rgba(52,199,89,0.04);">
+        <span style="color: #34C759; font-weight: 600;">7–8</span><span style="color:rgba(255,255,255,0.55)">Good — works well, a few improvements available</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; padding: 10px 14px; border-radius: 8px; background: rgba(255,214,10,0.05);">
+        <span style="color: #FFD60A; font-weight: 600;">5–6</span><span style="color:rgba(255,255,255,0.55)">Average — notable friction affects experience</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; padding: 10px 14px; border-radius: 8px; background: rgba(255,69,58,0.05);">
+        <span style="color: #FF453A; font-weight: 600;">3–4</span><span style="color:rgba(255,255,255,0.55)">Poor — significant problems affect core tasks</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; padding: 10px 14px; border-radius: 8px; background: rgba(255,69,58,0.08);">
+        <span style="color: #FF453A; font-weight: 600;">1–2</span><span style="color:rgba(255,255,255,0.55)">Broken — core flows fail or confuse users</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn btn-ghost" onclick="resetAll()">↺ Reset all</button>
+    <button class="btn btn-ghost" onclick="copyResults()">⎘ Copy results</button>
+  </div>
+
+  <div class="footer">
+    Crafted with ❤️ by MacPaw · Inspired by <a href="https://developer.apple.com/design/human-interface-guidelines/" target="_blank">Apple Human Interface Guidelines</a>
+  </div>
+</div>
+
+<script>
+  const TOTAL = document.querySelectorAll('.item').length;
+
+  function toggle(el) {
+    el.classList.toggle('checked');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const checked = document.querySelectorAll('.item.checked').length;
+    const pct = Math.round((checked / TOTAL) * 100);
+
+    document.getElementById('pct').textContent = pct + '%';
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = checked + ' of ' + TOTAL + ' checks completed';
+
+    const badge = document.getElementById('score-badge');
+    if (pct === 0) { badge.textContent = 'Not started'; badge.style.color = 'rgba(255,255,255,0.3)'; }
+    else if (pct < 40) { badge.textContent = '🔴 Needs work'; badge.style.color = '#FF453A'; }
+    else if (pct < 70) { badge.textContent = '🟡 In progress'; badge.style.color = '#FFD60A'; }
+    else if (pct < 90) { badge.textContent = '🟢 Looking good'; badge.style.color = '#34C759'; }
+    else if (pct < 100) { badge.textContent = '✨ Almost there'; badge.style.color = '#5E5CE6'; }
+    else { badge.textContent = '🏆 Ship it!'; badge.style.color = '#0A84FF'; }
+
+    // Update section counts
+    document.querySelectorAll('.section[data-tab]').forEach(section => {
+      const tab = section.dataset.tab;
+      if (tab === 'legend') return;
+      const items = section.querySelectorAll('.item');
+      const done = section.querySelectorAll('.item.checked').length;
+      const countEl = section.querySelector('.section-count');
+      if (countEl) countEl.textContent = done + ' / ' + items.length;
+    });
+  }
+
+  function showTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.section').forEach(s => {
+      if (tab === 'all') {
+        s.classList.toggle('visible', s.dataset.tab !== 'legend');
+      } else {
+        s.classList.toggle('visible', s.dataset.tab === tab);
+      }
+    });
+  }
+
+  function resetAll() {
+    if (!confirm('Reset all checks?')) return;
+    document.querySelectorAll('.item.checked').forEach(el => el.classList.remove('checked'));
+    updateProgress();
+  }
+
+  function copyResults() {
+    const checked = document.querySelectorAll('.item.checked').length;
+    const pct = Math.round((checked / TOTAL) * 100);
+    const lines = [`macOS UX Checklist — ${checked}/${TOTAL} checks passed (${pct}%)\n`];
+
+    document.querySelectorAll('.section[data-tab]:not([data-tab="legend"])').forEach(section => {
+      const title = section.querySelector('.section-title')?.textContent;
+      const items = section.querySelectorAll('.item');
+      const done = section.querySelectorAll('.item.checked').length;
+      lines.push(`\n${title}: ${done}/${items.length}`);
+      items.forEach(item => {
+        const text = item.querySelector('.item-text').textContent;
+        const status = item.classList.contains('checked') ? '✅' : '❌';
+        lines.push(`  ${status} ${text}`);
+      });
+    });
+
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      const btn = event.target;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '⎘ Copy results', 2000);
+    });
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
