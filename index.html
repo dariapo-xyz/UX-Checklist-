@@ -310,6 +310,33 @@
   .score-low { color: #FF453A; }
   .score-mid { color: #FFD60A; }
   .score-high { color: #34C759; }
+
+  /* Inline examples */
+  .example {
+    display: flex;
+    gap: 12px;
+    margin-top: 7px;
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .ex-good {
+    background: rgba(52,199,89,0.08);
+    border: 1px solid rgba(52,199,89,0.2);
+    color: rgba(255,255,255,0.6);
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-family: 'SF Mono', monospace;
+  }
+  .ex-good::before { content: '✅ '; }
+  .ex-bad {
+    background: rgba(255,69,58,0.08);
+    border: 1px solid rgba(255,69,58,0.15);
+    color: rgba(255,255,255,0.6);
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-family: 'SF Mono', monospace;
+  }
+  .ex-bad::before { content: '❌ '; }
 </style>
 </head>
 <body>
@@ -344,6 +371,8 @@
     <div class="tab" onclick="showTab('copy')">✍️ Copy</div>
     <div class="tab" onclick="showTab('onboarding')">🚀 Onboarding</div>
     <div class="tab" onclick="showTab('navigation')">🗺 Navigation</div>
+    <div class="tab" onclick="showTab('performance')">⚡ Performance</div>
+    <div class="tab" onclick="showTab('errorrecovery')">🛟 Errors</div>
     <div class="tab" onclick="showTab('legend')">📖 Issue Types</div>
   </div>
 
@@ -354,13 +383,13 @@
       <div class="section-count" id="count-visual"></div>
     </div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Uses SF Pro (or SF Mono for code). No custom fonts that clash with macOS feel</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Body text is at least 13pt. Nothing important smaller than 11pt</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Body text is at least 13pt. Nothing important smaller than 11pt</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Spacing follows 8pt grid. Padding is consistent across the app</div><span class="severity sev-polish">Polish</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Text contrast meets WCAG AA: 4.5:1 for text, 3:1 for UI elements</div><span class="severity sev-critical">Critical</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Dark mode works. No hardcoded hex colors — uses NSColor semantic values</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Traffic lights (●●●) are in standard position. Window is resizable where expected</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Native macOS controls used where possible (NSButton, NSTextField, etc.)</div><span class="severity sev-polish">Polish</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Custom controls look clearly interactive. No mystery meat navigation</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">All icons have visible labels or tooltips — no icon-only UI without explanation</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Vibrancy / translucency used appropriately (NSVisualEffectView)</div><span class="severity sev-polish">Polish</span></div></div>
   </div>
 
@@ -372,11 +401,11 @@
     </div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Every action >200ms shows a loading indicator</div><span class="severity sev-critical">Critical</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Every action >2s shows progress with estimated time or %</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Errors use human language. No error codes shown to users</div><span class="severity sev-critical">Critical</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Error messages include: what happened + why + how to fix it</div><span class="severity sev-critical">Critical</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Success states are confirmed clearly (not just "nothing went wrong")</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Empty states are instructive — tell the user what to do, not just show nothing</div><span class="severity sev-critical">Critical</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Destructive actions (delete, overwrite) require confirmation</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Errors use human language. No error codes shown to users</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Couldn't connect. Check your Wi-Fi and try again.</span><span class="ex-bad">Error 503</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Error messages include: what happened + why + how to fix it</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Upload failed — file is over 25 MB. Compress it and try again.</span><span class="ex-bad">Upload failed.</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Success states are confirmed clearly (not just "nothing went wrong")</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">12 files backed up successfully</span><span class="ex-bad">(silence / no message)</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Empty states are instructive — tell the user what to do, not just show nothing</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">No notes yet. Press ⌘N to create your first one.</span><span class="ex-bad">No items found</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Destructive actions (delete, overwrite) require confirmation</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Delete "Project.zip"? This can't be undone.</span><span class="ex-bad">Are you sure?</span></div></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Undo is available for destructive actions where possible</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Hover states are visible on all interactive elements</div><span class="severity sev-polish">Polish</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Focus rings visible for keyboard navigation</div><span class="severity sev-important">Important</span></div></div>
@@ -392,7 +421,7 @@
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tab order is logical (left→right, top→bottom)</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Common actions have keyboard shortcuts (⌘N, ⌘S, ⌘W, etc.)</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Shortcuts follow macOS conventions. No conflicts with system shortcuts</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">VoiceOver labels set on all controls (accessibilityLabel)</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">VoiceOver labels set on all controls (accessibilityLabel)</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Images and icons have accessibility descriptions</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">App works with Reduce Motion preference enabled</div><span class="severity sev-polish">Polish</span></div></div>
   </div>
@@ -403,13 +432,16 @@
       <div class="section-title">✍️ UX Copy</div>
       <div class="section-count" id="count-copy"></div>
     </div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Button labels are action-oriented ("Save Changes" not "OK")</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">No jargon or technical terms in UI visible to end users</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Sentence case used consistently (not Title Case Everywhere)</div><span class="severity sev-polish">Polish</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Onboarding copy is encouraging and progressive, not overwhelming</div><span class="severity sev-important">Important</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tooltips add new information — they don't just repeat the button label</div><span class="severity sev-polish">Polish</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Placeholder text is an example, not a label (don't replace the label with placeholder)</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Button labels are action-oriented</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">Save Changes</span><span class="ex-good">Delete Account</span><span class="ex-bad">OK</span><span class="ex-bad">Submit</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">No jargon or technical terms visible to end users</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">Reconnecting...</span><span class="ex-bad">WebSocket connection failed</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Sentence case used consistently</div><span class="severity sev-polish">Polish</span><div class="example"><span class="ex-good">Save to folder</span><span class="ex-bad">Save To Folder</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Onboarding copy is encouraging and progressive, not overwhelming</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">Let's set up your first backup — takes 2 minutes.</span><span class="ex-bad">Configure your preferences, set retention policy, add exclusions...</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tooltips add new information — don't just repeat the button label</div><span class="severity sev-polish">Polish</span><div class="example"><span class="ex-good">Archive (moves to archive, keeps for 30 days)</span><span class="ex-bad">Archive</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Placeholder text is an example, not a label</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">Label: "Name" · Placeholder: "e.g. My Backup"</span><span class="ex-bad">Placeholder only: "Name"</span></div></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Tone is consistent across all screens</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Confirmation dialogs describe the action specifically</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Delete "Project.zip"? This can't be undone.</span><span class="ex-bad">Are you sure?</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Numbers and units are human-readable and contextualized</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">7.2 GB of cache files (safe to remove)</span><span class="ex-bad">7,324,928,512 bytes</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Empty states have specific copy — not just "No items found"</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">No backups yet. Click "New Backup" to protect your files.</span><span class="ex-bad">No items found</span></div></div></div>
   </div>
 
   <!-- Section: Onboarding -->
@@ -419,10 +451,13 @@
       <div class="section-count" id="count-onboarding"></div>
     </div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">First-run experience guides user to first value in under 3 steps</div><span class="severity sev-critical">Critical</span></div></div>
-    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Permission requests explain why the permission is needed and what it enables</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Permission requests explain why the permission is needed and what it enables</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Access your Desktop to back up files you're working on.</span><span class="ex-bad">This app requires Full Disk Access.</span></div></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">No required sign-up before user sees value</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Setup progress is shown if onboarding has multiple steps</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">User can skip non-essential onboarding steps</div><span class="severity sev-polish">Polish</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Welcome screen communicates value proposition clearly in one sentence</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Sample or demo data is shown in empty states so user understands what the app does before adding their own</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Notification permission is requested in context — after user sees value, not on first launch</div><span class="severity sev-critical">Critical</span></div></div>
   </div>
 
   <!-- Section: Navigation -->
@@ -436,6 +471,35 @@
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">The most common action is the most prominent one</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Settings are easy to find. Not buried more than 2 levels deep</div><span class="severity sev-important">Important</span></div></div>
     <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Navigation structure matches macOS conventions for the app type</div><span class="severity sev-important">Important</span></div></div>
+  </div>
+
+  <!-- Section: Performance -->
+  <div class="section visible" data-tab="performance">
+    <div class="section-header">
+      <div class="section-title">⚡ Performance & Responsiveness</div>
+      <div class="section-count" id="count-performance"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">App launches in under 3 seconds on a standard Mac. No blank white window while loading</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">UI responds to clicks instantly (<100ms feel). No frozen or unresponsive states without explanation</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Animations run at 60fps. No jank during transitions or scrolling</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">App does not cause excessive CPU/fan activity when idle</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Memory usage is reasonable and does not grow unbounded over time</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Long operations (sync, export, scan) run in background — UI remains usable</div><span class="severity sev-critical">Critical</span></div></div>
+  </div>
+
+  <!-- Section: Error Recovery -->
+  <div class="section visible" data-tab="errorrecovery">
+    <div class="section-header">
+      <div class="section-title">🛟 Error Handling & Recovery</div>
+      <div class="section-count" id="count-errorrecovery"></div>
+    </div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Every error has a clear recovery path — a button or instruction telling user what to do next</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Couldn't save. [Try Again] or [Save Locally]</span><span class="ex-bad">Save failed. (no action)</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Network errors distinguish between "no connection" and "server error"</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">You're offline. Changes will sync when you reconnect.</span><span class="ex-bad">Connection error</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">App never silently fails — if something went wrong the user always knows</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">If a long operation fails midway, user's data and progress are preserved</div><span class="severity sev-critical">Critical</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Crash or force-quit recovery — app restores to last known state on relaunch</div><span class="severity sev-important">Important</span></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Validation errors shown inline next to the field, not in a generic alert at the top</div><span class="severity sev-important">Important</span><div class="example"><span class="ex-good">Red border + "Must be at least 8 characters" under the field</span><span class="ex-bad">Alert: "Invalid input"</span></div></div></div>
+    <div class="item" onclick="toggle(this)"><div class="checkbox"><span class="checkmark">✓</span></div><div class="item-content"><div class="item-text">Permission denied errors explain exactly how to fix it</div><span class="severity sev-critical">Critical</span><div class="example"><span class="ex-good">Open System Settings → Privacy & Security → Files → enable [App]</span><span class="ex-bad">Permission denied</span></div></div></div>
   </div>
 
   <!-- Section: Legend -->
@@ -485,7 +549,7 @@
   </div>
 
   <div class="footer">
-    Crafted with ❤️ by MacPaw · Based on Apple HIG, real-world UX evaluations, and MacPaw's best practices
+    Crafted with ❤️ by MacPaw · Based on <a href="https://developer.apple.com/design/human-interface-guidelines/" target="_blank">Apple HIG</a>, real-world UX evaluations, and MacPaw's best practices
   </div>
 </div>
 
@@ -527,7 +591,8 @@
 
     document.getElementById('pct').textContent = pct + '%';
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-label').textContent = checked + ' of ' + TOTAL + ' checks completed';
+    const total = document.querySelectorAll('.item').length;
+    document.getElementById('progress-label').textContent = checked + ' of ' + total + ' checks completed';
 
     const badge = document.getElementById('score-badge');
     if (pct === 0) { badge.textContent = 'Not started'; badge.style.color = 'rgba(255,255,255,0.3)'; }
@@ -559,6 +624,7 @@
         s.classList.toggle('visible', s.dataset.tab === tab);
       }
     });
+    updateProgress();
   }
 
   function resetAll() {
